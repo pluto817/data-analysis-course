@@ -1,0 +1,84 @@
+# Netflix Movie Duration Prediction
+
+## 1. Project Overview
+
+This project analyzes Netflix titles and builds regression models to predict movie duration using metadata such as release year, content rating, country, and genre.
+
+The project focuses on data preprocessing, feature engineering, regularized regression, hyperparameter tuning, and model evaluation.
+
+## 2. Dataset
+
+- Dataset: Netflix Titles
+- Total records: 6,234
+- Total features: 12
+- Movies: 4,265
+- TV Shows: 1,969
+
+Only movies are used for duration prediction because TV show duration is recorded differently.
+
+## 3. Methods
+
+### Data Preprocessing
+- Examined missing values and dataset structure.
+- Extracted movie duration in minutes.
+- Processed missing categorical values.
+
+### Feature Engineering
+- Release year
+- Content rating
+- Main country
+- Primary genre
+
+Categorical variables were encoded using one-hot encoding, while the numeric feature was standardized.
+
+### Models
+- Ridge Regression
+- Lasso Regression
+- Elastic Net Regression
+
+GridSearchCV with five-fold cross-validation was used to tune Elastic Net hyperparameters.
+
+## 4. Model Evaluation
+
+The tuned Elastic Net model achieved the following results on the test set:
+
+| Metric | Result |
+|---|---:|
+| MAE | 14.05 minutes |
+| RMSE | 19.01 minutes |
+| R² | 0.5066 |
+
+The results indicate that the model captures some of the variation in movie duration, while prediction errors remain.
+
+## 5. Visualizations
+
+The `results/` directory contains:
+
+- `actual_vs_predicted.png`: Actual versus predicted movie duration.
+- `model_comparison.png`: Comparison of regression model errors.
+- `duration_distribution.png`: Distribution of movie durations.
+- `model_comparison.csv`: Model evaluation results.
+
+## 6. Technologies
+
+- Python
+- pandas
+- NumPy
+- scikit-learn
+- Matplotlib
+
+## 7. How to Run
+
+Install the required packages:
+
+```bash
+pip install pandas numpy scikit-learn matplotlib
+```
+
+Place `netflix_titles.csv` in the same directory as `netflix_elastic_net.py`, then run:
+
+```bash
+python netflix_elastic_net.py
+```
+
+The generated charts and model comparison results will be saved in the `results/` directory.
