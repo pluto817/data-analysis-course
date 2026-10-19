@@ -1,0 +1,2 @@
+﻿Best Parameters,CV F1,Test Accuracy,Test ROC-AUC
+"{'classifier__C': 1, 'classifier__gamma': 'scale', 'classifier__kernel': 'rbf'}",0.8416909541142154,0.74,0.7834523809523809

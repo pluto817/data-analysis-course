@@ -1,0 +1,2 @@
+﻿Best Parameters,CV Macro F1,Test Accuracy,Test ROC-AUC
+"{'classifier__C': 10, 'classifier__gamma': 'scale', 'classifier__kernel': 'rbf'}",0.9312388493384903,0.9207383279044516,0.9701807912951609

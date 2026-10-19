@@ -1,0 +1,233 @@
+# Assignment 04: Support Vector Machine (SVM) Classification
+# 第四次作业：支持向量机分类实验
+
+## 1. Overview / 实验概述
+
+This assignment applies Support Vector Machine (SVM) algorithms to two classification datasets: German Credit and Spambase.
+
+本次作业使用支持向量机（Support Vector Machine，SVM）算法，对 German Credit（德国信用风险）和 Spambase（垃圾邮件分类）两个数据集进行分类实验。
+
+实验主要包括以下内容：
+
+- 数据读取与初步分析（Data Loading and Exploration）
+- 数据预处理（Data Preprocessing）
+- 训练集与测试集划分（Train-Test Split）
+- SVM 模型构建（Model Construction）
+- 超参数调优（Hyperparameter Tuning）
+- 模型评估与结果可视化（Model Evaluation and Visualization）
+
+**实验目标：** 学习 SVM 分类算法的基本应用流程，比较模型在不同分类任务上的表现，并分析分类结果。
+
+## 2. Datasets / 数据集介绍
+
+### 2.1 German Credit Dataset / 德国信用风险数据集
+
+- **Task / 实验任务：** Credit Risk Classification（信用风险分类）
+- **Samples / 样本数量：** 1,000
+- **Features / 特征数量：** 20
+- **Target / 分类标签：** Good Credit Risk（好信用）和 Bad Credit Risk（坏信用）
+
+该数据集包含个人信用相关信息，用于判断申请人的信用风险类别。本实验将其作为二分类任务，利用 SVM 学习信用特征与风险类别之间的关系。
+
+**数据预处理：**
+
+1. 将数据读取为结构化表格。
+2. 检查缺失值及类别分布。
+3. 对数值特征进行标准化。
+4. 对类别特征进行独热编码（One-Hot Encoding）。
+5. 使用中位数和众数策略处理潜在缺失值。
+
+### 2.2 Spambase Dataset / 垃圾邮件数据集
+
+- **Task / 实验任务：** Email Spam Classification（垃圾邮件分类）
+- **Samples / 样本数量：** 4,601
+- **Features / 特征数量：** 57
+- **Target / 分类标签：** Spam（垃圾邮件）和 Non-spam（正常邮件）
+
+该数据集使用邮件中的词频、字符频率及其他统计特征描述邮件内容。模型根据这些特征判断邮件是否属于垃圾邮件。
+
+**数据预处理：**
+
+1. 读取数据并检查数据维度。
+2. 检查缺失值和类别分布。
+3. 将前 57 列作为输入特征，最后一列作为分类标签。
+4. 使用中位数填补潜在缺失值。
+5. 对特征进行标准化，以减小不同特征量纲的影响。
+
+## 3. Methodology / 实验方法
+
+### 3.1 Data Splitting / 数据集划分
+
+两个数据集均按照 80:20 的比例划分训练集和测试集，并使用分层抽样（Stratified Sampling），尽量保持划分前后各类别的比例一致。
+
+- **Training Set / 训练集：** 用于训练模型和选择参数。
+- **Test Set / 测试集：** 用于评估最终模型在未参与训练的数据上的表现。
+
+### 3.2 SVM Model / 支持向量机模型
+
+支持向量机是一种常用的监督学习算法。其核心思想是在特征空间中寻找能够区分不同类别的决策边界，并尽可能扩大类别之间的间隔。
+
+本实验使用 RBF（Radial Basis Function，径向基函数）核和 Linear（线性）核进行比较。
+
+- **Linear Kernel / 线性核：** 适用于能够通过线性边界较好区分的样本。
+- **RBF Kernel / 径向基核：** 能够通过非线性映射处理更复杂的分类关系。
+
+### 3.3 Hyperparameter Tuning / 超参数调优
+
+实验使用 GridSearchCV（网格搜索交叉验证）比较多组参数，并通过五折交叉验证评估模型表现。
+
+| Parameter / 参数 | Candidate Values / 候选值 | 说明 |
+|---|---|---|
+| `C` | 0.1, 1, 10 | 控制分类错误惩罚与模型复杂度之间的权衡 |
+| `gamma` | scale, 0.01, 0.1 | 控制 RBF 核函数的影响范围 |
+| `kernel` | rbf, linear | 选择核函数类型 |
+
+German Credit 使用 F1-score 作为模型选择指标；Spambase 使用 Macro F1（宏平均 F1），兼顾不同类别的分类效果。
+
+### 3.4 Evaluation Metrics / 评价指标
+
+本实验采用以下指标评价分类模型：
+
+- **Accuracy（准确率）：** 所有样本中预测正确的比例。
+- **Precision（精确率）：** 被预测为某一类别的样本中，实际属于该类别的比例。
+- **Recall（召回率）：** 实际属于某一类别的样本中，被模型正确识别的比例。
+- **F1-score：** 精确率和召回率的调和平均值。
+- **ROC-AUC：** 衡量模型区分不同类别的能力，通常越接近 1 表示区分能力越强。
+- **Confusion Matrix（混淆矩阵）：** 展示各真实类别与预测类别之间的对应关系。
+
+## 4. Experimental Results / 实验结果
+
+### 4.1 German Credit Results / 德国信用风险实验结果
+
+| Metric / 指标 | Result / 结果 |
+|---|---:|
+| Training Samples / 训练样本数 | 800 |
+| Testing Samples / 测试样本数 | 200 |
+| Best Kernel / 最佳核函数 | RBF |
+| Best C | 1 |
+| Best Gamma | scale |
+| Cross-validation F1 / 交叉验证 F1 | 0.8417 |
+| Test Accuracy / 测试集准确率 | 0.7400 |
+| ROC-AUC | 0.7835 |
+
+**结果分析：**
+
+模型在测试集上的准确率为 74.00%，ROC-AUC 为 0.7835，表明模型具备一定的信用风险区分能力。
+
+从分类报告来看，模型对好信用样本的识别效果较好，但对坏信用样本的召回率仅为 0.38。这意味着模型仍会漏掉部分实际属于坏信用类别的样本。
+
+在信用风险预测场景中，漏判风险样本可能造成实际损失。因此，后续可以考虑调整模型选择指标、优化参数范围，或采用类别权重等方法改善少数类别的识别效果。
+
+**Best Parameters / 最佳参数：**
+
+`C = 1, gamma = scale, kernel = rbf`
+
+### 4.2 Spambase Results / 垃圾邮件分类实验结果
+
+| Metric / 指标 | Result / 结果 |
+|---|---:|
+| Training Samples / 训练样本数 | 3,680 |
+| Testing Samples / 测试样本数 | 921 |
+| Best Kernel / 最佳核函数 | RBF |
+| Best C | 10 |
+| Best Gamma | scale |
+| Cross-validation Macro F1 / 交叉验证宏平均 F1 | 0.9312 |
+| Test Accuracy / 测试集准确率 | 0.9207 |
+| ROC-AUC | 0.9702 |
+
+**结果分析：**
+
+模型在测试集上的准确率为 92.07%，ROC-AUC 为 0.9702，表现出较强的邮件分类能力。
+
+其中，正常邮件的 F1-score 为 0.94，垃圾邮件的 F1-score 为 0.90。两类样本均获得了较好的分类结果，但垃圾邮件召回率为 0.88，仍有部分垃圾邮件被误判为正常邮件。
+
+**Best Parameters / 最佳参数：**
+
+`C = 10, gamma = scale, kernel = rbf`
+
+## 5. Comparison and Discussion / 结果比较与讨论
+
+在当前实验设置下，SVM 在 Spambase 数据集上的分类效果优于 German Credit 数据集。
+
+| Metric / 指标 | German Credit | Spambase |
+|---|---:|---:|
+| Samples / 样本数 | 1,000 | 4,601 |
+| Test Accuracy / 测试集准确率 | 74.00% | 92.07% |
+| ROC-AUC | 0.7835 | 0.9702 |
+| Best Kernel / 最佳核函数 | RBF | RBF |
+
+**原因分析：**
+
+1. 两个数据集的特征类型和数据分布存在差异。
+2. German Credit 同时包含数值特征和类别特征，信用风险本身也具有较强的不确定性。
+3. Spambase 的特征主要为数值统计特征，标准化后可以直接用于 SVM 模型训练。
+4. German Credit 中不同类别的识别效果存在差距，因此仅使用准确率无法全面反映模型的风险识别能力。
+
+需要注意的是，两个数据集的分类任务和难度不同，以上结果只能说明模型在本次实验设置下的表现差异，不能直接据此判断某个数据集本身更适合 SVM。
+
+## 6. Output Files / 实验输出文件
+
+每个数据集文件夹包含以下内容：
+
+- Python 脚本：完成数据读取、预处理、模型训练、参数调优及评估。
+- `results/confusion_matrix.png`：混淆矩阵可视化结果。
+- `results/svm_metrics.csv`：保存最佳参数、交叉验证指标、测试集准确率和 ROC-AUC。
+
+## 7. Project Structure / 项目结构
+
+```text
+Assignment_04_SVM/
+├── README.md
+├── German_Credit/
+│   ├── data/
+│   │   └── german.data
+│   ├── german_credit_svm.py
+│   └── results/
+│       ├── confusion_matrix.png
+│       └── svm_metrics.csv
+└── Spambase/
+    ├── data/
+    │   ├── spambase.data
+    │   └── spambase.names
+    ├── spambase.py
+    └── results/
+        ├── confusion_matrix.png
+        └── svm_metrics.csv
+```
+
+## 8. Environment and Execution / 运行环境与方法
+
+**Environment / 环境：**
+
+- Python 3
+- pandas
+- scikit-learn
+- matplotlib
+
+**Install dependencies / 安装依赖：**
+
+```bash
+pip install pandas scikit-learn matplotlib
+```
+
+**Run German Credit / 运行德国信用风险实验：**
+
+```bash
+python german_credit_svm.py
+```
+
+**Run Spambase / 运行垃圾邮件分类实验：**
+
+```bash
+python spambase.py
+```
+
+运行前，请确保对应数据集文件已放入各自的 `data` 目录。
+
+## 9. Conclusion / 实验总结
+
+本次实验使用 SVM 对德国信用风险和垃圾邮件两个数据集进行了分类研究，完成了数据预处理、特征标准化、模型构建、五折交叉验证、超参数调优和测试集评估。
+
+实验结果表明，SVM 能够应用于不同类型的二分类任务，但模型效果会受到数据特征、类别分布和参数设置等因素影响。通过准确率、Precision、Recall、F1-score、ROC-AUC 和混淆矩阵等指标进行综合评价，可以更全面地理解模型的优点与不足。
+
+通过本次作业，加深了对 SVM 分类原理、模型调优流程及分类评价指标的理解，也认识到在实际分类任务中需要结合具体业务目标选择合适的评价标准。
