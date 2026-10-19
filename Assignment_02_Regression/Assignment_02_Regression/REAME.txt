@@ -1,0 +1,110 @@
+# Assignment 02: Regularized Regression Analysis
+
+## 1. Project Overview
+
+This assignment explores and compares three regularized linear regression methods: Ridge Regression, Lasso Regression, and Elastic Net.
+
+The goal is to predict baseball players' salaries using player performance statistics and to compare the predictive performance of different regression models.
+
+本次作业使用棒球运动员数据，建立并比较三种正则化线性回归模型，分析它们的预测效果和特征选择能力。
+
+## 2. Dataset
+
+**Dataset:** Hitters.csv
+
+The dataset contains information about baseball players, including batting statistics, career performance, fielding statistics, league information, and salary.
+
+- Total observations: 322
+- Total columns: 20
+- Target variable: `Salary`
+- Missing values in `Salary`: 59
+- Observations remaining after removing missing target values: 263
+
+由于部分运动员的薪资数据缺失，本实验删除了 `Salary` 缺失的记录，最终使用 263 条有效样本进行建模。
+
+## 3. Methods
+
+### Ridge Regression
+
+Ridge Regression adds an L2 regularization penalty to the linear regression objective. It reduces coefficient magnitudes and can help control overfitting.
+
+岭回归通过 L2 正则化约束回归系数，通常不会将系数直接压缩为零。
+
+### Lasso Regression
+
+Lasso Regression uses an L1 regularization penalty. It can shrink some coefficients to zero, allowing feature selection.
+
+Lasso 回归能够将部分特征的系数压缩为零，从而实现特征筛选。
+
+### Elastic Net
+
+Elastic Net combines L1 and L2 regularization. It balances coefficient shrinkage and feature selection.
+
+弹性网络结合 L1 和 L2 正则化，兼顾系数约束与特征选择。
+
+## 4. Tools and Libraries
+
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+
+## 5. Workflow
+
+1. Load and inspect the dataset.
+2. Check and handle missing values.
+3. Encode categorical variables into numerical features.
+4. Separate the features (`X`) and target variable (`y`).
+5. Split the data into training and testing sets.
+6. Use cross-validation to select model parameters.
+7. Evaluate models using RMSE and R².
+8. Compare the number of non-zero coefficients.
+
+数据集按照 80% 训练集和 20% 测试集划分，使用交叉验证选择模型参数，并通过测试集 RMSE、R² 和非零系数数量比较模型。
+
+## 6. Experimental Results
+
+| Model | Best Alpha | Test RMSE | Test R² | Non-zero Coefficients |
+|---|---:|---:|---:|---:|
+| Ridge | 79.06 | 382.21 | 0.1923 | 19 |
+| Lasso | 19.31 | 378.78 | 0.2068 | 6 |
+| Elastic Net | 0.4942 | 382.61 | 0.1906 | 19 |
+
+In this experiment, Lasso achieved the lowest test RMSE and the highest test R² among the three models. It also retained only six non-zero coefficients, showing stronger feature sparsity in this particular experiment.
+
+本次实验中，Lasso 的测试集预测误差最低、R² 最高，并且保留的非零系数最少，表现出较强的特征筛选能力。
+
+However, the R² values of all three models were relatively low. The results should be interpreted in the context of this dataset and the chosen train-test split.
+
+需要注意的是，三种模型的 R² 均约为 0.2，说明模型对薪资差异的解释能力有限。由于本实验使用单次数据划分，结果可能受到训练集和测试集划分的影响。
+
+## 7. Files
+
+- `ridge_lasso_elasticnet.py` — Python script for data preprocessing, model training, parameter selection, and evaluation.
+- `Hitters.csv` — Dataset used in the experiment.
+- `README.md` — Project description, methods, and experimental results.
+
+## 8. How to Run
+
+Install the required libraries:
+
+```bash
+python -m pip install pandas numpy scikit-learn
+```
+
+Run the Python script from the assignment directory:
+
+```bash
+python ridge_lasso_elasticnet.py
+```
+
+Make sure `Hitters.csv` is located in the same directory as the Python script.
+
+## 9. Learning Objectives
+
+- Understand regularization in linear regression.
+- Compare Ridge, Lasso, and Elastic Net.
+- Practice data cleaning and categorical feature encoding.
+- Learn train-test splitting and cross-validation.
+- Evaluate regression models using RMSE and R².
+- Interpret model coefficients and experimental results.
